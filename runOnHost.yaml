@@ -1,0 +1,33 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: run-on-host
+data:
+  runOnHost.sh: |
+    #!/bin/bash
+
+    # Copy installation script to host
+    cp /home/install/install.sh /home/nodeconfig
+
+    # Copy wait script to the host 
+    cp /home/wait/wait.sh /home/nodeconfig
+
+    # Copy several more config maps to the host
+    cp /home/azureuser/OMP_Root_CA.crt /home/nodeconfig
+    cp /home/etc-hosts/etc-hosts /home/nodeconfig 
+    cp /home/resolv-conf/resolv.conf /home/nodeconfig
+
+    # Wait for updates to complete
+    /usr/bin/nsenter -m/proc/1/ns/mnt -- chmod u+x /home/nodeconfig/wait.sh
+
+    # Give execute priv to script
+    /usr/bin/nsenter -m/proc/1/ns/mnt -- chmod u+x /home/nodeconfig/install.sh
+
+    # Wait for Node updates to complete
+    #/usr/bin/nsenter -m/proc/1/ns/mnt /home/nodeconfig/wait.sh
+
+    # If the /tmp folder is mounted on the host then it can run the script
+    /usr/bin/nsenter -m/proc/1/ns/mnt /home/nodeconfig/install.sh
+
+    # Sleep so that the Pod in the DaemonSet does not exit
+    sleep infinity

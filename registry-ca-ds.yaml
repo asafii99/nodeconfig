@@ -1,0 +1,62 @@
+apiVersion: apps/v1 
+kind: DaemonSet
+metadata:
+  name: registry-ca
+  namespace: default
+spec:
+  selector:      
+    matchLabels:
+      name: registry-ca        
+  template:
+    metadata:
+      labels:
+        name: registry-ca
+    spec:
+      hostPID: true
+      containers:
+      - name: registry-ca
+        image: ubuntu:18.04
+        securityContext:
+          privileged: true
+        command: [ 'sh' ]
+        args: [ '-c', './home/host/runOnHost.sh' ]
+        volumeMounts:
+        - name: omp-root-ca
+          mountPath: /home/azureuser
+        - name: install-script
+          mountPath: /home/install
+        - name: run-on-host-script
+          mountPath: /home/host
+        - name: wait
+          mountPath: /home/wait
+        - name: etc-hosts
+          mountPath: /home/etc-hosts
+        - name: resolv-conf
+          mountPath: /home/resolv-conf
+        - name: host-mount
+          mountPath: /home/nodeconfig
+      terminationGracePeriodSeconds: 30
+      volumes:
+      - name: omp-root-ca
+        secret:
+          secretName: root-ca
+      - name: install-script
+        configMap:
+          name: node-config
+      - name: run-on-host-script
+        configMap:
+         name: run-on-host
+         defaultMode: 0777
+      - name: wait
+        configMap:
+          name: wait
+      - name: etc-hosts
+        configMap:
+          name: etc-hosts
+          defaultMode: 0644
+      - name: resolv-conf
+        configMap:
+          name: resolv.conf
+      - name: host-mount
+        hostPath:
+          path:  /home/nodeconfig

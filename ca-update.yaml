@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: node-config
+data:
+  install.sh: |
+    #!/bin/bash
+
+    apt-get update
+    cp /home/nodeconfig/OMP_Root_CA.crt /usr/local/share/ca-certificates/OMP_Root_CA.crt
+    cp /home/nodeconfig/etc-hosts /etc/hosts
+    cp /home/nodeconfig/resolv.conf /etc/resolv.conf
+    update-ca-certificates
+    # sed -i '2i\192.168.9.200  omhqproget.domain.ompartners.com' /etc/hosts
+    # cp /etc/hosts.bckup /etc/hosts
+    cat /etc/hosts
+    # apt install resolvconf -y
+    cat /etc/resolv.conf
+    docker login omhqproget.domain.ompartners.com:443 -u api -p vkr5wMxytTliH7zJIM4X
