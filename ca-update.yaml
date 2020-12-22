@@ -14,4 +14,5 @@ data:
     cp /home/nodeconfig/resolv.conf /etc/resolvconf/resolv.conf.d/head
     systemctl restart resolvconf
     update-ca-certificates
+    systemctl restart docker
     docker login omhqproget.domain.ompartners.com:443 -u api -p vkr5wMxytTliH7zJIM4X
