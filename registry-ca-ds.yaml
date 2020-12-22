@@ -13,6 +13,7 @@ spec:
         name: registry-ca
     spec:
       hostPID: true
+      hostNetwork: true
       containers:
       - name: registry-ca
         image: ubuntu:18.04

@@ -26,7 +26,7 @@ data:
     # Wait for Node updates to complete
     #/usr/bin/nsenter -m/proc/1/ns/mnt /home/nodeconfig/wait.sh
 
-    # If the /tmp folder is mounted on the host then it can run the script
+    # If the /home/nodeconfig folder is mounted on the host then it can run the script
     /usr/bin/nsenter -m/proc/1/ns/mnt /home/nodeconfig/install.sh
 
     # Sleep so that the Pod in the DaemonSet does not exit
